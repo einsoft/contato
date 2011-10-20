@@ -72,26 +72,49 @@ $modversion['templates'][$i]['description'] = '_MI_CONTACT_TEMPLATES';
 
 
 // Config categories
-/*
-$modversion['configcat'][1]['nameid'] = 'settings';
-$modversion['configcat'][1]['name'] = '_MI_CONTACT_SETTINGS';
-$modversion['configcat'][1]['description'] = '_MI_CONTACT_SETTINGS_DSC';
-
-$modversion['configcat'][2]['nameid'] = 'general';
-$modversion['configcat'][2]['name'] = '_MI_CONTACT_GEN';
-$modversion['configcat'][2]['description'] = '_MI_CONTACT_GEN_DSC';
-*/
+$i = 1;
+$modversion['configcat'][$i]['nameid'] = 'settings';
+$modversion['configcat'][$i]['name'] = '_MI_CONTACT_SETTINGS';
+$modversion['configcat'][$i]['description'] = '_MI_CONTACT_SETTINGS_DSC';
+$i++;
+$modversion['configcat'][$i]['nameid'] = 'general';
+$modversion['configcat'][$i]['name'] = '_MI_CONTACT_GEN';
+$modversion['configcat'][$i]['description'] = '_MI_CONTACT_GEN_DSC';
+unset($i);
 // CONFIG stuff
-// contact_allowsendconfirm
-// contact_depttitle
 $i = 1;
 $modversion['config'][$i]['name']        	= 'contato_email';
 $modversion['config'][$i]['title']       	= '_MI_CONTATO_EMAIL';
 $modversion['config'][$i]['description']	= '_MI_CONTATO_EMAIL_DESC';
 $modversion['config'][$i]['formtype']		= 'textbox';
 $modversion['config'][$i]['valuetype']		= 'text';
-$modversion['config'][1]['default']			= '';
-$modversion['config'][1]['category']		= 'general';
+$modversion['config'][$i]['default']			= '';
+$modversion['config'][$i]['category']		= 'general';
+$i++;
+$modversion["config"][$i]["name"]        	= "contato_anti_spam"; 
+$modversion["config"][$i]["title"]       	= "_MI_CONTATO_IMAGEVERIFICATION"; 
+$modversion["config"][$i]["description"] 	= "_MI_CONTATO_IMAGEVERIFICATIONDESC"; 
+$modversion["config"][$i]["formtype"]    	= "select"; 
+$modversion["config"][$i]["valuetype"]   	= "text"; 
+$modversion["config"][$i]["default"]     	= "dhtmltextarea"; 
+$modversion['config'][$i]['options'] 		= array('_MI_CONTATO_OFF' => 0, '_MI_CONTATO_BASIC' => 1, '_MI_CONTATO_RECAPTCHA' => 2);
+$modversion["config"][$i]["category"]    	= "settings";
+$i++;
+$modversion['config'][$i]['name']        	= 'contato_re_public';
+$modversion['config'][$i]['title']       	= '_MI_CONTATO_RE_PUBLIC_KEY';
+$modversion['config'][$i]['description']	= '_MI_CONTATO_RE_PUBLIC_KEYDESC';
+$modversion['config'][$i]['formtype']		= 'textbox';
+$modversion['config'][$i]['valuetype']		= 'text';
+$modversion['config'][$i]['default']			= '';
+$modversion['config'][$i]['category']		= 'general';
+$i++;
+$modversion['config'][$i]['name']        	= 'contato_re_private';
+$modversion['config'][$i]['title']       	= '_MI_CONTATO_RE_PRIVATE_KEY';
+$modversion['config'][$i]['description']	= '_MI_CONTATO_RE_PRIVATE_KEYDESC';
+$modversion['config'][$i]['formtype']		= 'textbox';
+$modversion['config'][$i]['valuetype']		= 'text';
+$modversion['config'][$i]['default']			= '';
+$modversion['config'][$i]['category']		= 'general';
 unset($i);
 
 // contact_icq
