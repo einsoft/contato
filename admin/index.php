@@ -26,9 +26,9 @@ include_once XOOPS_ROOT_PATH."/modules/" . $xoopsModule->getVar("dirname") . "/c
 
 	$index_admin = new ModuleAdmin();
 
-$index_admin->addConfigLabel(_AM_MYMODULE_CONFIG_CHECK) ;
-$index_admin->addLineConfigLabel(_AM_MYMODULE_CONFIG_PHP, $xoopsModule->getInfo("min_php"), 'php') ;
-$index_admin->addLineConfigLabel(_AM_MYMODULE_CONFIG_XOOPS, $xoopsModule->getInfo("min_xoops"), 'xoops') ;	
+$index_admin->addConfigLabel(_AM_CONTATO_CONFIG_CHECK) ;
+$index_admin->addLineConfigLabel(_AM_CONTATO_CONFIG_PHP, $xoopsModule->getInfo("min_php"), 'php') ;
+$index_admin->addLineConfigLabel(_AM_CONTATO_CONFIG_XOOPS, $xoopsModule->getInfo("min_xoops"), 'xoops') ;	
 	
 	echo $index_admin->addNavigation('index.php') ;
     echo $index_admin->renderIndex();
