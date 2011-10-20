@@ -5,8 +5,9 @@ if (!is_object($GLOBALS['xoopsUser'])) {
     redirect_header(XOOPS_URL, 3, _NOPERM);
     exit();
 }
-$xoopsConfig['module_cache'] = 0; //disable caching since the URL will be the same, but content different from one user to another
+
 $xoopsOption['template_main'] = "contato_formulario.html";
+
 include $GLOBALS['xoops']->path('header.php');
 /*
 ** Dagon Design Form Mailer 
@@ -45,12 +46,12 @@ $path_to_css = 'dd-formmailer.css';
 // LANGUAGE SETTING 
 // The relative path to the language file you want to use.
 
-$language = 'lang/Portuguese.php';
+//$language = 'language/portugues/main.php';
 
 // FULL URL TO SCRIPT
 // The full URL to dd-formmailer.php (or whatever you have renamed it to)
 
-$script_path = XOOPS_URL.'/modules/contato/index.php';
+$script_path = XOOPS_URL.'/modules/' . $xoopsModule->getVar("dirname") . '/index.php';
 
 // FULL URL TO CONTACT PAGE
 // If you are running this script in standalone mode, leave this blank. Otherwise,
@@ -141,7 +142,18 @@ $auto_reply_message = '';
 // You can disable image verification, use the simple built-in method, or use ReCaptcha
 // If you use ReCaptcha, sign up for a free account at http://recaptcha.net and enter the codes below
 
-$verify_method = 'basic'; // 'off', 'basic', or 'recaptcha'
+if ($xoopsModuleConfig['contato_anti_spam']==0) {
+	$antispam =  'off';
+	} 
+elseif
+($xoopsModuleConfig['contato_anti_spam']==1) {
+	$antispam =  'basic';
+	}
+else {
+	$antispam =  'recaptcha';
+}
+
+$verify_method = $antispam; // 'off', 'basic', or 'recaptcha'
 
 // BASIC IMAGE VERIFICATION OPTIONS
 
@@ -152,8 +164,8 @@ $force_type = '';				// problems showing the code? try forcing to 'gif', 'jpeg' 
 // RECAPTCHA IMAGE VERIFICATION OPTIONS
 // Public and private keys - you get these when you sign up an account at http://recaptcha.net
 
-$re_public_key = '';
-$re_private_key = '';
+$re_public_key = $xoopsModuleConfig['contato_re_public'];
+$re_private_key = $xoopsModuleConfig['contato_re_private'];
 
 
 
@@ -202,7 +214,7 @@ $verify_method = strtolower($verify_method);
 
 
 /* Convert hex color code to R, G, B */
-function ddfm_hex_to_rgb($h) {
+function _MD_DDFM_hex_to_rgb($h) {
 	$h = trim($h, "#");
 	$color = array();	
 	if (strlen($h) == 6) {
@@ -254,8 +266,8 @@ if (isset($_GET['v'])) {
 		header("Expires: Mon, 1 Jan 2000 01:00:00 GMT"); // Date in the past
 		$image = imagecreate(60, 24);
 
-		list($br, $bg, $bb) = ddfm_hex_to_rgb($verify_background);
-		list($rr, $rg, $rb) = ddfm_hex_to_rgb($verify_text);
+		list($br, $bg, $bb) = _MD_DDFM_hex_to_rgb($verify_background);
+		list($rr, $rg, $rb) = _MD_DDFM_hex_to_rgb($verify_text);
 
 		$background_color = imagecolorallocate($image, $br, $bg, $bb);
 		$text_color = imagecolorallocate($image, $rr, $rg, $rb);
@@ -279,7 +291,7 @@ if (isset($_GET['v'])) {
 
 
 /* Check for GD support */
-function ddfm_check_gd_support() {
+function _MD_DDFM_check_gd_support() {
 	if (extension_loaded("gd") && (function_exists("imagegif") || function_exists("imagepng") || function_exists("imagejpeg"))) {
 		return TRUE;
 	} else {
@@ -288,7 +300,7 @@ function ddfm_check_gd_support() {
 }
 
 /* Safe str_replace */
-function ddfm_str_replace($search, $replace, $subject) {
+function _MD_DDFM_str_replace($search, $replace, $subject) {
 	if (isset($search)) {
 		return str_replace($search, $replace, $subject);
 	} else {
@@ -297,7 +309,7 @@ function ddfm_str_replace($search, $replace, $subject) {
 }
 
 /* Check for valid URL */
-function ddfm_is_valid_url($link) { 
+function _MD_DDFM_is_valid_url($link) { 
 	if (strpos($link, "http://") === FALSE) {
 		$link = "http://" . $link;
 	}
@@ -362,20 +374,20 @@ function dd_is_valid_email($email) {
 
 
 /* Check for injection characters */
-function ddfm_injection_chars($s) {
+function _MD_DDFM_injection_chars($s) {
 	return (eregi("\r", $s) || eregi("\n", $s) || eregi("%0a", $s) || eregi("%0d", $s)) ? TRUE : FALSE;
 }
 
 
 /* Make output safe for the browser */
-function ddfm_bsafe($input) {
+function _MD_DDFM_bsafe($input) {
 	return htmlspecialchars(stripslashes($input));
 }
 
 
 
 
-function ddfm_stripslashes($s) {
+function _MD_DDFM_stripslashes($s) {
 	if (get_magic_quotes_gpc()) {
 		return stripslashes($s);
 	} else {
@@ -384,14 +396,14 @@ function ddfm_stripslashes($s) {
 }
 
 
-function ddfm_injection_test($str) { 
+function _MD_DDFM_injection_test($str) { 
 	$tests = array("/bcc\:/i", "/Content\-Type\:/i", "/Mime\-Version\:/i", "/cc\:/i", "/from\:/i", "/to\:/i", "/Content\-Transfer\-Encoding\:/i"); 
 	return preg_replace($tests, "", $str); 
 } 
 
 
 
-function ddfm_send_mail($recipients, $sender_name, $sender_email, $email_subject, $email_msg, $attachments = false) {
+function _MD_DDFM_send_mail($recipients, $sender_name, $sender_email, $email_subject, $email_msg, $attachments = false) {
 
 	$extra_recips = '';
 
@@ -426,9 +438,9 @@ function ddfm_send_mail($recipients, $sender_name, $sender_email, $email_subject
 	}
 
 
-	$sender_name = ddfm_injection_test($sender_name);
-	$sender_email = ddfm_injection_test($sender_email);
-	$email_subject = ddfm_injection_test($email_subject);
+	$sender_name = _MD_DDFM_injection_test($sender_name);
+	$sender_email = _MD_DDFM_injection_test($sender_email);
+	$email_subject = _MD_DDFM_injection_test($email_subject);
 
 
 	if (trim($sender_name) == "") {
@@ -508,13 +520,13 @@ $form_input = array();
 
 // START of functions to show form output
 
-function ddfm_gen_text($item) {
+function _MD_DDFM_gen_text($item) {
 
 	// type=text|class=|label=|fieldname=|max=|req=(TRUEFALSE)|[ver=]|[default=]
 
 	global $form_submitted, $form_input, $show_required;
 
-	$req_text = (($show_required) && ($item['req'] == 'true')) ? '<span class="required">' . DDFM_REQUIREDTAG . '</span> ' : '';
+	$req_text = (($show_required) && ($item['req'] == 'true')) ? '<span class="required">' . _MD_DDFM_REQUIREDTAG . '</span> ' : '';
 
 	$gen = "";
 //	$gen .= '<p class="fieldwrap"><label for="' . $item['fieldname'] . '">' . $req_text . $item['label'] . '</label>';
@@ -522,9 +534,9 @@ function ddfm_gen_text($item) {
 	$gen .= '<input class="' . $item['class'] . '" type="text" name="' . $item['fieldname'] . '" id="' . $item['fieldname'] . '" value="';
 
 	if ($form_submitted) {
-		$gen .= ddfm_bsafe($form_input[$item['fieldname']]);
+		$gen .= _MD_DDFM_bsafe($form_input[$item['fieldname']]);
 	} else if (isset($item['default'])) {
-		$gen .= ddfm_bsafe($item['default']);
+		$gen .= _MD_DDFM_bsafe($item['default']);
 	}
 
 	$gen .= ''. $item['label'] .'" onfocus=\'if(this.value=="'. $item['label'] .'"){this.value="";}\' onblur=\'if(this.value==""){this.value="'. $item['label'] .'";}\' /></p>' . "\n\n";
@@ -534,13 +546,13 @@ function ddfm_gen_text($item) {
 
 
 
-function ddfm_gen_password($item) {
+function _MD_DDFM_gen_password($item) {
 
 	// type=password|class=|label=|fieldname=|max=|req=(TRUEFALSE)|confirm=(TRUEFALSE)
 
 	global $form_submitted, $form_input, $show_required;
 
-	$req_text = (($show_required) && $item['req'] == 'true') ? '<span class="required">' . DDFM_REQUIREDTAG . '</span> ' : '';
+	$req_text = (($show_required) && $item['req'] == 'true') ? '<span class="required">' . _MD_DDFM_REQUIREDTAG . '</span> ' : '';
 
 	$gen = "";
 //	$gen .= '<p class="fieldwrap"><label for="' . $item['fieldname'] . '">' . $req_text . $item['label'] . '</label>' . "\n";
@@ -551,7 +563,7 @@ function ddfm_gen_password($item) {
 	if ($item['confirm'] == 'true') {
 
 		// Duplicate field (add 'c' to end)
-//		$gen .= '<p class="fieldwrap"><label for="' . $item['fieldname'] . 'c">' . $req_text . DDFM_CONFIRMPASS . ' ' . $item['label'] . '</label>' . "\n";
+//		$gen .= '<p class="fieldwrap"><label for="' . $item['fieldname'] . 'c">' . $req_text . _MD_DDFM_CONFIRMPASS . ' ' . $item['label'] . '</label>' . "\n";
 	$gen .= '<p class="fieldwrap">';
 		$gen .= '<input class="' . $item['class'] . '" type="password" name="' . $item['fieldname'] . 'c" id="' . $item['fieldname'] . 'c" value="';
 		$gen .= '" /></p>' . "\n\n";
@@ -563,13 +575,13 @@ function ddfm_gen_password($item) {
 
 
 
-function ddfm_gen_textarea($item) {
+function _MD_DDFM_gen_textarea($item) {
 
 	// type=textarea|class=|label=|fieldname=|max=|rows=|req=(TRUEFALSE)|[default=]
 
 	global $form_submitted, $form_input, $show_required;
 
-	$req_text = (($show_required) && $item['req'] == 'true') ? '<span class="required">' . DDFM_REQUIREDTAG . '</span> ' : '';
+	$req_text = (($show_required) && $item['req'] == 'true') ? '<span class="required">' . _MD_DDFM_REQUIREDTAG . '</span> ' : '';
 
 	$gen = "";
 //	$gen .= '<p class="fieldwrap"><label for="' . $item['fieldname'] . '">' . $req_text . $item['label'] . '</label>' . "\n";
@@ -577,9 +589,9 @@ function ddfm_gen_textarea($item) {
 	$gen .= '<textarea class="' . $item['class'] . '" name="' . $item['fieldname'] . '" cols="20" rows="' . $item['rows'] . '" id="' . $item['fieldname'] . ' ">';
 
 	if ($form_submitted) {
-		$gen .= ddfm_bsafe($form_input[$item['fieldname']]);
+		$gen .= _MD_DDFM_bsafe($form_input[$item['fieldname']]);
 	} else if (isset($item['default'])) {
-		$gen .= ddfm_bsafe($item['default']);
+		$gen .= _MD_DDFM_bsafe($item['default']);
 	}
 
 	$gen .= '</textarea></p>' . "\n\n";
@@ -588,13 +600,13 @@ function ddfm_gen_textarea($item) {
 
 
 
-function ddfm_gen_widetextarea($item) {
+function _MD_DDFM_gen_widetextarea($item) {
 
 	// type=widetextarea|class=|label=|fieldname=|max=|rows=|req=(TRUEFALSE)|[default=]
 
 	global $form_submitted, $form_input, $show_required;
 
-	$req_text = (($show_required) && $item['req'] == 'true') ? '<span class="required">' . DDFM_REQUIREDTAG . '</span> ' : '';
+	$req_text = (($show_required) && $item['req'] == 'true') ? '<span class="required">' . _MD_DDFM_REQUIREDTAG . '</span> ' : '';
 
 	$gen = "";
 //	$gen .= '<p class="fieldwrap"><label for="' . $item['fieldname'] . '" class="fmtextlblwide">' . $req_text . $item['label'] . '</label>' . "\n";
@@ -602,9 +614,9 @@ function ddfm_gen_widetextarea($item) {
 	$gen .= '<textarea class="' . $item['class'] . '" name="' . $item['fieldname'] . '" cols="20" rows="' . $item['rows'] . '" id="' . $item['fieldname'] . '">';
 
 	if ($form_submitted) {
-		$gen .= ddfm_bsafe($form_input[$item['fieldname']]);
+		$gen .= _MD_DDFM_bsafe($form_input[$item['fieldname']]);
 	} else if (isset($item['default'])) {
-		$gen .= ddfm_bsafe($item['default']);
+		$gen .= _MD_DDFM_bsafe($item['default']);
 	}
 
 	$gen .= '</textarea></p>' . "\n\n";
@@ -614,7 +626,7 @@ function ddfm_gen_widetextarea($item) {
 
 
 
-function ddfm_gen_verify($item) {
+function _MD_DDFM_gen_verify($item) {
 
 	// type=verify|class=|label=
 
@@ -622,11 +634,11 @@ function ddfm_gen_verify($item) {
 
 	if ($verify_method != 'basic') return '';
 
-	$req_text = ($show_required) ? '<span class="required">' . DDFM_REQUIREDTAG . '</span> ' : '';
+	$req_text = ($show_required) ? '<span class="required">' . _MD_DDFM_REQUIREDTAG . '</span> ' : '';
 
 	$gen = "";
 
-	if (ddfm_check_gd_support()) {
+	if (_MD_DDFM_check_gd_support()) {
 //		$gen .= '<p class="fieldwrap"><label for="fm_verify">' . $req_text . $item['label'] . '</label>' . "\n";
 	$gen .= '<p class="fieldwrap">';
 		$gen .= '<input class="'. $item['class'] . '" type="text" name="fm_verify" id="fm_verify" value="Digite o código abaixo" onfocus=\'if(this.value=="Digite o código abaixo"){this.value="";}\' onblur=\'if(this.value==""){this.value="Digite o código abaixo";}\' />' . "\n";
@@ -638,7 +650,7 @@ function ddfm_gen_verify($item) {
 }
 
 
-function ddfm_gen_fullblock($item) {
+function _MD_DDFM_gen_fullblock($item) {
 
 	// type=fullblock|class=|text=
 
@@ -652,7 +664,7 @@ function ddfm_gen_fullblock($item) {
 }
 
 
-function ddfm_gen_halfblock($item) {
+function _MD_DDFM_gen_halfblock($item) {
 
 	// type=halfblock|class=|text=
 
@@ -666,19 +678,19 @@ function ddfm_gen_halfblock($item) {
 }
 
   
-function ddfm_gen_openfieldset($item) {
+function _MD_DDFM_gen_openfieldset($item) {
 
 	// type=openfieldset|legend=
 
 	$gen = "";
 
-	$gen .= '<fieldset><legend>' . ddfm_bsafe($item['legend']) . '</legend>' . "\n\n";
+	$gen .= '<fieldset><legend>' . _MD_DDFM_bsafe($item['legend']) . '</legend>' . "\n\n";
 
 	return $gen;
 }
 
 
-function ddfm_gen_closefieldset($item) {
+function _MD_DDFM_gen_closefieldset($item) {
 
 	// type=closefieldset
 
@@ -690,7 +702,7 @@ function ddfm_gen_closefieldset($item) {
 }
 
 
-function ddfm_gen_checkbox($item) {
+function _MD_DDFM_gen_checkbox($item) {
 
 	// type=checkbox|class=|label=|data=
 	//	 (fieldname),(text),(CHECKED),(REQUIRED),
@@ -708,7 +720,7 @@ function ddfm_gen_checkbox($item) {
 
 	for ($i = 0; $i < sizeof($data); $i+=4) {
 
-		$req_text = (($show_required) && ($data[$i+3] == 'true')) ? ' <span class="required">' . DDFM_REQUIREDTAG . '</span>' : '';
+		$req_text = (($show_required) && ($data[$i+3] == 'true')) ? ' <span class="required">' . _MD_DDFM_REQUIREDTAG . '</span>' : '';
 
 		$gen .= '<p><input type="checkbox" name="' . 
 			$data[$i] . '" value="' . $data[$i + 1] . '"';
@@ -732,14 +744,14 @@ function ddfm_gen_checkbox($item) {
 }
 
 
-function ddfm_gen_radio($item) {
+function _MD_DDFM_gen_radio($item) {
 
 	//  type=radio|class=|label=|fieldname=|req=|[default=]|data=
 	//	  (text),(text),(text)
 
 	global $form_submitted, $form_input, $show_required;
 
-	$req_text = (($show_required) && ($item['req'] == 'true')) ? '<span class="required">' . DDFM_REQUIREDTAG . '</span> ' : '';
+	$req_text = (($show_required) && ($item['req'] == 'true')) ? '<span class="required">' . _MD_DDFM_REQUIREDTAG . '</span> ' : '';
 
 	$gen = "";
 
@@ -777,14 +789,14 @@ function ddfm_gen_radio($item) {
 
 
 
-function ddfm_gen_select($item) {
+function _MD_DDFM_gen_select($item) {
 
 	//	type=select|class=|label=|fieldname=|multi=(TRUEFALSE)|data=
 	//    (#group),(text),(text),(#group),(text),(text)
 
 	global $form_submitted, $form_input, $show_required;
 
-	$req_text = (($show_required) && ($item['req'] == 'true')) ? '<span class="required">' . DDFM_REQUIREDTAG . '</span> ' : '';
+	$req_text = (($show_required) && ($item['req'] == 'true')) ? '<span class="required">' . _MD_DDFM_REQUIREDTAG . '</span> ' : '';
 
 	$gen = "";
 
@@ -860,13 +872,13 @@ function ddfm_gen_select($item) {
 }
 
 
-function ddfm_gen_file($item) {
+function _MD_DDFM_gen_file($item) {
 
 	// type=file|class=|label=|fieldname=|req=(TRUEFALSE)|[allowed=1,2,3]
 
 	global $form_submitted, $form_input, $show_required, $max_file_size;
 
-	$req_text = (($show_required) && ($item['req'] == 'true')) ? '<span class="required">' . DDFM_REQUIREDTAG . '</span> ' : '';
+	$req_text = (($show_required) && ($item['req'] == 'true')) ? '<span class="required">' . _MD_DDFM_REQUIREDTAG . '</span> ' : '';
 
 	$gen = "";
 
@@ -879,13 +891,13 @@ function ddfm_gen_file($item) {
 }
 
 
-function ddfm_gen_selrecip($item) {
+function _MD_DDFM_gen_selrecip($item) {
 
 	// type=selrecip|class=|label=|data=User1,user1@domain.com,User2 etc..
 
 	global $form_submitted, $form_input, $show_required;
 
-	$req_text = ($show_required) ? '<span class="required">' . DDFM_REQUIREDTAG . '</span> ' : '';
+	$req_text = ($show_required) ? '<span class="required">' . _MD_DDFM_REQUIREDTAG . '</span> ' : '';
 
 	$gen = "";
 
@@ -1015,7 +1027,7 @@ function ddfm_gen_selrecip($item) {
                                 $_POST["recaptcha_challenge_field"],
                                 $_POST["recaptcha_response_field"]);
 			if (!$resp->is_valid) {
-				$errors[] = DDFM_INVALIDVER;
+				$errors[] = _MD_DDFM_INVALIDVER;
 			}
 		}
 
@@ -1053,9 +1065,9 @@ function ddfm_gen_selrecip($item) {
 
 			// check for fields used in vars
 			if (isset($form_input[$fs['fieldname']])) {
-				$sender_name = ddfm_str_replace($fs['fieldname'], ddfm_stripslashes($form_input[$fs['fieldname']]), $sender_name);
-				$sender_email = ddfm_str_replace($fs['fieldname'], ddfm_stripslashes($form_input[$fs['fieldname']]), $sender_email);
-				$email_subject = ddfm_str_replace($fs['fieldname'], ddfm_stripslashes($form_input[$fs['fieldname']]), $email_subject);
+				$sender_name = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_stripslashes($form_input[$fs['fieldname']]), $sender_name);
+				$sender_email = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_stripslashes($form_input[$fs['fieldname']]), $sender_email);
+				$email_subject = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_stripslashes($form_input[$fs['fieldname']]), $email_subject);
 			}
 
 			switch ($fs['type']) {
@@ -1064,35 +1076,35 @@ function ddfm_gen_selrecip($item) {
 
 					// type=text|class=|label=|fieldname=|max=|req=(TRUEFALSE)|[ver=]|[default=]
 
-					$t = ddfm_stripslashes($form_input[$fs['fieldname']]);
+					$t = _MD_DDFM_stripslashes($form_input[$fs['fieldname']]);
 
 					if ((strtolower($fs['req']) == 'true') && ($t == "")) { 
 
-						$errors[] = DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
+						$errors[] = _MD_DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
 
 					} else if (strlen($t) > (int)$fs['max']) {
 
-						$errors[] = $fs['max'] . ' ' . DDFM_MAXCHARLIMIT . " '" . $fs['label'] . "'";
+						$errors[] = $fs['max'] . ' ' . _MD_DDFM_MAXCHARLIMIT . " '" . $fs['label'] . "'";
 
-					} else if (ddfm_injection_chars($t)) {
+					} else if (_MD_DDFM_injection_chars($t)) {
 
-						$errors[] = DDFM_INVALIDINPUT . " '" . $fs['label'] . "'";
+						$errors[] = _MD_DDFM_INVALIDINPUT . " '" . $fs['label'] . "'";
 
 					} else	if ((strtolower($fs['ver']) == 'email') && ((strtolower($fs['req']) == "true") || ($t != ""))) {
 
-						if (!dd_is_valid_email($t)) $errors[] = DDFM_INVALIDEMAIL . " '" . $fs['label'] . "'";
+						if (!dd_is_valid_email($t)) $errors[] = _MD_DDFM_INVALIDEMAIL . " '" . $fs['label'] . "'";
 
 					} else if ((strtolower($fs['ver']) == 'url') && ((strtolower($fs['req']) == "true") || ($t != ""))) {
 
-						if (!ddfm_is_valid_url($t)) $errors[] = DDFM_INVALIDURL . " '" . $fs['label'] . "'";
+						if (!_MD_DDFM_is_valid_url($t)) $errors[] = _MD_DDFM_INVALIDURL . " '" . $fs['label'] . "'";
 
 					} 
 
 					$csv .= str_replace($save_delimiter, ' ', $t) . $save_delimiter;
 					$mail_message .= $fs['label'] . $msg_field_sep . $t . $msg_field_line_end;
-					$message_structure = ddfm_str_replace($fs['fieldname'], $t, $message_structure);
-					$auto_reply_message = ddfm_str_replace($fs['fieldname'], $t, $auto_reply_message);
-					$sent_message = ddfm_str_replace($fs['fieldname'], ddfm_bsafe($t), $sent_message);
+					$message_structure = _MD_DDFM_str_replace($fs['fieldname'], $t, $message_structure);
+					$auto_reply_message = _MD_DDFM_str_replace($fs['fieldname'], $t, $auto_reply_message);
+					$sent_message = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_bsafe($t), $sent_message);
 
 
 					break;
@@ -1101,33 +1113,33 @@ function ddfm_gen_selrecip($item) {
 
 					// type=password|class=|label=|fieldname=|max=|req=(TRUEFALSE)|confirm=(TRUEFALSE)
 
-					$t = ddfm_stripslashes($form_input[$fs['fieldname']]);
+					$t = _MD_DDFM_stripslashes($form_input[$fs['fieldname']]);
 
 					if ((strtolower($fs['req']) == 'true') && ($t == "")) {
 
-						$errors[] = DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
+						$errors[] = _MD_DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
 		
 					} else if (strlen($t) > (int)$fs['max']) {
 
-						$errors[] = $fs['max'] . ' ' . DDFM_MAXCHARLIMIT . " '" . $fs['label'] . "'";
+						$errors[] = $fs['max'] . ' ' . _MD_DDFM_MAXCHARLIMIT . " '" . $fs['label'] . "'";
 
-					} else if (ddfm_injection_chars($t)) {
+					} else if (_MD_DDFM_injection_chars($t)) {
 
-						$errors[] = DDFM_INVALIDINPUT . " '" . $fs['label'] . "'";
+						$errors[] = _MD_DDFM_INVALIDINPUT . " '" . $fs['label'] . "'";
 
 					} else if (strtolower($fs['confirm']) == 'true') {
 
-						$tc = ddfm_stripslashes($form_input[$fs['fieldname']  . 'c']);
+						$tc = _MD_DDFM_stripslashes($form_input[$fs['fieldname']  . 'c']);
 			
-						if ($t != $tc) $errors[] = DDFM_NOMATCH . " '" . $fs['label'] . "'";
+						if ($t != $tc) $errors[] = _MD_DDFM_NOMATCH . " '" . $fs['label'] . "'";
 
 					}
 
 					$csv .= str_replace($save_delimiter, ' ', $t) . $save_delimiter;
 					$mail_message .= $fs['label'] . $msg_field_sep . $t . $msg_field_line_end;
-					$message_structure = ddfm_str_replace($fs['fieldname'], $t, $message_structure);
-					$auto_reply_message = ddfm_str_replace($fs['fieldname'], $t, $auto_reply_message);
-					$sent_message = ddfm_str_replace($fs['fieldname'], ddfm_bsafe($t), $sent_message);
+					$message_structure = _MD_DDFM_str_replace($fs['fieldname'], $t, $message_structure);
+					$auto_reply_message = _MD_DDFM_str_replace($fs['fieldname'], $t, $auto_reply_message);
+					$sent_message = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_bsafe($t), $sent_message);
 
 
 					break;
@@ -1137,23 +1149,23 @@ function ddfm_gen_selrecip($item) {
 			
 					// type=textarea|class=|label=|fieldname=|max=|rows=|req=(TRUEFALSE)|[default=]
 
-					$t = ddfm_stripslashes($form_input[$fs['fieldname']]);
+					$t = _MD_DDFM_stripslashes($form_input[$fs['fieldname']]);
 
 					if ((strtolower($fs['req']) == 'true') && ($t == "")) {
 
-						$errors[] = DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
+						$errors[] = _MD_DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
 
 					} else if (strlen($t) > (int)$fs['max']) {
 			
-						$errors[] = $fs['max'] . ' ' . DDFM_MAXCHARLIMIT . " '" . $fs['label'] . "'";
+						$errors[] = $fs['max'] . ' ' . _MD_DDFM_MAXCHARLIMIT . " '" . $fs['label'] . "'";
 
 					}
 
 					$csv .= str_replace($save_delimiter, ' ', $t) . $save_delimiter;
 					$mail_message .= $fs['label'] . $msg_field_sep . $t . $msg_field_line_end;
-					$message_structure = ddfm_str_replace($fs['fieldname'], $t, $message_structure);
-					$auto_reply_message = ddfm_str_replace($fs['fieldname'], $t, $auto_reply_message);
-					$sent_message = ddfm_str_replace($fs['fieldname'], ddfm_bsafe($t), $sent_message);
+					$message_structure = _MD_DDFM_str_replace($fs['fieldname'], $t, $message_structure);
+					$auto_reply_message = _MD_DDFM_str_replace($fs['fieldname'], $t, $auto_reply_message);
+					$sent_message = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_bsafe($t), $sent_message);
 
 
 					break;				
@@ -1164,19 +1176,19 @@ function ddfm_gen_selrecip($item) {
 
 					if ($verify_method == 'basic') {
 
-						$t = ddfm_stripslashes($form_input['fm_verify']);
+						$t = _MD_DDFM_stripslashes($form_input['fm_verify']);
 
 						if ($t == "") {
 
-							$errors[] = DDFM_MISSINGVER;
+							$errors[] = _MD_DDFM_MISSINGVER;
 
 						} else if (trim($_COOKIE["ddfmcode"]) == "") {
 
-							$errors[] = DDFM_NOVERGEN;
+							$errors[] = _MD_DDFM_NOVERGEN;
 
 						} else if ($_COOKIE["ddfmcode"] != md5(strtoupper($t))) { 
 
-							$errors[] = DDFM_INVALIDVER;
+							$errors[] = _MD_DDFM_INVALIDVER;
 
 						} 
 
@@ -1197,17 +1209,17 @@ function ddfm_gen_selrecip($item) {
 
 					for ($i = 0; $i < count($data); $i+=4) {
 
-						$t = ddfm_stripslashes(trim($form_input[$data[$i]]));
+						$t = _MD_DDFM_stripslashes(trim($form_input[$data[$i]]));
 
 						if ((strtolower($data[$i+3]) == 'true') && ($t == "")) {
-							$errors[] = DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
+							$errors[] = _MD_DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
 						}
 
 						if ($t != "") $tmp_msg[] = $t;
 
-						$message_structure = ddfm_str_replace($data[$i], $t, $message_structure);
-						$auto_reply_message = ddfm_str_replace($data[$i], $t, $auto_reply_message);
-						$sent_message = ddfm_str_replace($data[$i], ddfm_bsafe($t), $sent_message);
+						$message_structure = _MD_DDFM_str_replace($data[$i], $t, $message_structure);
+						$auto_reply_message = _MD_DDFM_str_replace($data[$i], $t, $auto_reply_message);
+						$sent_message = _MD_DDFM_str_replace($data[$i], _MD_DDFM_bsafe($t), $sent_message);
 
 
 					}
@@ -1222,19 +1234,19 @@ function ddfm_gen_selrecip($item) {
 					//  type=radio|class=|label=|fieldname=|req=|[default=]|data=
 					//	  (text),(text),(text),(text)
 
-					$t = ddfm_stripslashes(trim($form_input[$fs['fieldname']]));
+					$t = _MD_DDFM_stripslashes(trim($form_input[$fs['fieldname']]));
 
 					if ((strtolower($fs['req']) == 'true') && ($t == "")) {
 
-						$errors[] = DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
+						$errors[] = _MD_DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
 
 					}
 
 					$csv .= str_replace($save_delimiter, ' ', $t) . $save_delimiter;	
 					$mail_message .= $fs['label'] . $msg_field_sep . $t . $msg_field_line_end;
-					$message_structure = ddfm_str_replace($fs['fieldname'], $t, $message_structure);
-					$auto_reply_message = ddfm_str_replace($fs['fieldname'], $t, $auto_reply_message);
-					$sent_message = ddfm_str_replace($fs['fieldname'], ddfm_bsafe($t), $sent_message);
+					$message_structure = _MD_DDFM_str_replace($fs['fieldname'], $t, $message_structure);
+					$auto_reply_message = _MD_DDFM_str_replace($fs['fieldname'], $t, $auto_reply_message);
+					$sent_message = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_bsafe($t), $sent_message);
 
 					break;
 
@@ -1247,19 +1259,19 @@ function ddfm_gen_selrecip($item) {
 
 					if (strtolower($fs['multi']) != 'true') {				
 
-						$t = ddfm_stripslashes($form_input[$fs['fieldname']]);
+						$t = _MD_DDFM_stripslashes($form_input[$fs['fieldname']]);
 
 						if ((strtolower($fs['req']) == 'true') && (($t == "") || ($t == $first_item))) {
 
-							$errors[] = DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
+							$errors[] = _MD_DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
 
 						}
 					
 						$csv .= str_replace($save_delimiter, ' ', $t) . $save_delimiter;
 						$mail_message .= $fs['label'] . $msg_field_sep . $t . $msg_field_line_end;
-						$message_structure = ddfm_str_replace($fs['fieldname'], $t, $message_structure);
-						$auto_reply_message = ddfm_str_replace($fs['fieldname'], $t, $auto_reply_message);
-						$sent_message = ddfm_str_replace($fs['fieldname'], ddfm_bsafe($t), $sent_message);
+						$message_structure = _MD_DDFM_str_replace($fs['fieldname'], $t, $message_structure);
+						$auto_reply_message = _MD_DDFM_str_replace($fs['fieldname'], $t, $auto_reply_message);
+						$sent_message = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_bsafe($t), $sent_message);
 
 
 					} else { // multi = true
@@ -1271,7 +1283,7 @@ function ddfm_gen_selrecip($item) {
 						}
 
 						if ((strtolower($fs['req']) == 'true') && (count($t) == 0)) {
-							$errors[] = DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
+							$errors[] = _MD_DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
 						}
 						
 						$tmp_msg = array();
@@ -1282,9 +1294,9 @@ function ddfm_gen_selrecip($item) {
 
 						$csv .= str_replace($save_delimiter, ' ', implode(', ', $tmp_msg)) . $save_delimiter;
 						$mail_message .= $fs['label'] . $msg_field_sep . implode(', ', $tmp_msg) . $msg_field_line_end;
-						$message_structure = ddfm_str_replace($fs['fieldname'], implode(', ', $tmp_msg), $message_structure);
-						$auto_reply_message = ddfm_str_replace($fs['fieldname'], implode(', ', $tmp_msg), $auto_reply_message);
-						$sent_message = ddfm_str_replace($fs['fieldname'], ddfm_bsafe(implode(', ', $tmp_msg)), $sent_message);
+						$message_structure = _MD_DDFM_str_replace($fs['fieldname'], implode(', ', $tmp_msg), $message_structure);
+						$auto_reply_message = _MD_DDFM_str_replace($fs['fieldname'], implode(', ', $tmp_msg), $auto_reply_message);
+						$sent_message = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_bsafe(implode(', ', $tmp_msg)), $sent_message);
 				
 					}
 
@@ -1295,7 +1307,7 @@ function ddfm_gen_selrecip($item) {
 					// type=file|class=|label=|fieldname=|[req=]|[allowed=1,2,3]
 
 					if ((strtolower($fs['req']) == 'true') && (($_FILES[$fs['fieldname']]['name'] == ""))) { 
-						$errors[] = DDFM_MISSINGFILE . " '" . $fs['label'] . "'";
+						$errors[] = _MD_DDFM_MISSINGFILE . " '" . $fs['label'] . "'";
 					}
 					
 
@@ -1307,7 +1319,7 @@ function ddfm_gen_selrecip($item) {
 
 					if (($_FILES[$fs['fieldname']]['name'] != "") && ((int)$_FILES[$fs['fieldname']]['size'] == 0)) {
 
-							$errors[] = DDFM_FILETOOBIG . ' ' . $_FILES[$fs['fieldname']]['name'];
+							$errors[] = _MD_DDFM_FILETOOBIG . ' ' . $_FILES[$fs['fieldname']]['name'];
 
 					} else if ($_FILES[$fs['fieldname']]['tmp_name'] != "") {
 
@@ -1341,26 +1353,26 @@ function ddfm_gen_selrecip($item) {
 									$attached_index++;
 
 									$csv .= str_replace($save_delimiter, ' ', $_FILES[$fs['fieldname']]['name']) . $save_delimiter;
-									$mail_message .= DDFM_ATTACHED . $msg_field_sep . $_FILES[$fs['fieldname']]['name'] . "\n\n"; 
+									$mail_message .= _MD_DDFM_ATTACHED . $msg_field_sep . $_FILES[$fs['fieldname']]['name'] . "\n\n"; 
 
-									$message_structure = ddfm_str_replace($fs['fieldname'], $_FILES[$fs['fieldname']]['name'], $message_structure);
-									$auto_reply_message = ddfm_str_replace($fs['fieldname'], $_FILES[$fs['fieldname']]['name'], $auto_reply_message);
-									$sent_message = ddfm_str_replace($fs['fieldname'], $_FILES[$fs['fieldname']]['name'], $sent_message);					
+									$message_structure = _MD_DDFM_str_replace($fs['fieldname'], $_FILES[$fs['fieldname']]['name'], $message_structure);
+									$auto_reply_message = _MD_DDFM_str_replace($fs['fieldname'], $_FILES[$fs['fieldname']]['name'], $auto_reply_message);
+									$sent_message = _MD_DDFM_str_replace($fs['fieldname'], $_FILES[$fs['fieldname']]['name'], $sent_message);					
 
 								} else { 
-									$errors[] = DDFM_FILETOOBIG . ' ' . $_FILES[$fs['fieldname']]['name'];
+									$errors[] = _MD_DDFM_FILETOOBIG . ' ' . $_FILES[$fs['fieldname']]['name'];
 								}
 							} else { 
-								$errors[] = DDFM_INVALIDEXT . ' ' . $_FILES[$fs['fieldname']]['name'];
+								$errors[] = _MD_DDFM_INVALIDEXT . ' ' . $_FILES[$fs['fieldname']]['name'];
 							}
 						} else { 
-							$errors[] = DDFM_UPLOADERR . ' ' . $_FILES[$fs['fieldname']]['name'];
+							$errors[] = _MD_DDFM_UPLOADERR . ' ' . $_FILES[$fs['fieldname']]['name'];
 						}
 					} 
 
-					$message_structure = ddfm_str_replace($fs['fieldname'], '', $message_structure);
-					$auto_reply_message = ddfm_str_replace($fs['fieldname'], $t, $auto_reply_message);
-					$sent_message = ddfm_str_replace($fs['fieldname'], ddfm_bsafe($t), $sent_message);
+					$message_structure = _MD_DDFM_str_replace($fs['fieldname'], '', $message_structure);
+					$auto_reply_message = _MD_DDFM_str_replace($fs['fieldname'], $t, $auto_reply_message);
+					$sent_message = _MD_DDFM_str_replace($fs['fieldname'], _MD_DDFM_bsafe($t), $sent_message);
 
 					break;
 
@@ -1371,11 +1383,11 @@ function ddfm_gen_selrecip($item) {
 
 					$data = explode(",", trim($fs['data']));
 					
-					$t = ddfm_stripslashes($form_input['fm_selrecip']);
+					$t = _MD_DDFM_stripslashes($form_input['fm_selrecip']);
 
 					if (($t == "") || ($t == $data[0])) {
 
-						$errors[] = DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
+						$errors[] = _MD_DDFM_MISSINGFIELD . " '" . $fs['label'] . "'";
 
 					} else {
 
@@ -1399,16 +1411,16 @@ function ddfm_gen_selrecip($item) {
 
 		// make sure no un-used fieldnames are left in template
 		foreach ($form_struct as $fs) {
-			$message_structure = ddfm_str_replace($fs['fieldname'], '', $message_structure);
-			$auto_reply_message = ddfm_str_replace($fs['fieldname'], '', $auto_reply_message);
-			$sent_message = ddfm_str_replace($fs['fieldname'], '', $sent_message);
+			$message_structure = _MD_DDFM_str_replace($fs['fieldname'], '', $message_structure);
+			$auto_reply_message = _MD_DDFM_str_replace($fs['fieldname'], '', $auto_reply_message);
+			$sent_message = _MD_DDFM_str_replace($fs['fieldname'], '', $sent_message);
 		}
 
 
 
-		if (ddfm_injection_chars($sender_name)) $errors[] = DDFM_INVALIDINPUT;
-		if (ddfm_injection_chars($sender_email)) $errors[] = DDFM_INVALIDINPUT;
-		if (ddfm_injection_chars($email_subject)) $errors[] = DDFM_INVALIDINPUT;
+		if (_MD_DDFM_injection_chars($sender_name)) $errors[] = _MD_DDFM_INVALIDINPUT;
+		if (_MD_DDFM_injection_chars($sender_email)) $errors[] = _MD_DDFM_INVALIDINPUT;
+		if (_MD_DDFM_injection_chars($email_subject)) $errors[] = _MD_DDFM_INVALIDINPUT;
 
 
 
@@ -1416,7 +1428,7 @@ function ddfm_gen_selrecip($item) {
 		
 		if ($errors) {
 
-			$o .= '<div class="ddfmwrap"><div class="ddfmerrors">' . DDFM_ERRORMSG . '</div>';
+			$o .= '<div class="ddfmwrap"><div class="ddfmerrors">' . _MD_DDFM_ERRORMSG . '</div>';
 			$o .= '<div class="errorlist">';
 			foreach ($errors as $err) {
 				$o .= $err . '<br />';
@@ -1462,7 +1474,7 @@ function ddfm_gen_selrecip($item) {
 
 			if ($sndmsg == TRUE) {
 
-				if (ddfm_send_mail($recipients, $sender_name, $sender_email, $email_subject, $mail_message, $attached_files)) {
+				if (_MD_DDFM_send_mail($recipients, $sender_name, $sender_email, $email_subject, $mail_message, $attached_files)) {
 		
 					$o .= $sent_message;
 	
@@ -1486,7 +1498,7 @@ function ddfm_gen_selrecip($item) {
 					$_POST = array();
 
 				} else {
-					$o .= DDFM_SERVERERR;
+					$o .= _MD_DDFM_SERVERERR;
 					$message_sent = FALSE;
 				}
 
@@ -1511,8 +1523,8 @@ function ddfm_gen_selrecip($item) {
 	if (!$message_sent) {	
 
 
-		if ($verify_method == 'basic' && !ddfm_check_gd_support()) {
-			$o .= DDFM_GDERROR;
+		if ($verify_method == 'basic' && !_MD_DDFM_check_gd_support()) {
+			$o .= _MD_DDFM_GDERROR;
 		}
 
 		if (trim($manual_form_code) == '') {	// ** Use normal form generation
@@ -1527,46 +1539,46 @@ function ddfm_gen_selrecip($item) {
 				switch ($f_i['type']) {
 
 					case 'text':
-						$o .= ddfm_gen_text($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_text($f_i, $show_required);	
 						break;
 					case 'password':
-						$o .= ddfm_gen_password($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_password($f_i, $show_required);	
 						break;
 					case 'textarea':
-						$o .= ddfm_gen_textarea($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_textarea($f_i, $show_required);	
 						break;
 					case 'widetextarea':
-						$o .= ddfm_gen_widetextarea($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_widetextarea($f_i, $show_required);	
 						break;
 					case 'verify':
-						$o .= ddfm_gen_verify($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_verify($f_i, $show_required);	
 						break;
 					case 'fullblock':
-						$o .= ddfm_gen_fullblock($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_fullblock($f_i, $show_required);	
 						break;
 					case 'halfblock':
-						$o .= ddfm_gen_halfblock($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_halfblock($f_i, $show_required);	
 						break;
 					case 'openfieldset':
-						$o .= ddfm_gen_openfieldset($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_openfieldset($f_i, $show_required);	
 						break;
 					case 'closefieldset':
-						$o .= ddfm_gen_closefieldset($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_closefieldset($f_i, $show_required);	
 						break;
 					case 'checkbox':
-						$o .= ddfm_gen_checkbox($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_checkbox($f_i, $show_required);	
 						break;
 					case 'radio':
-						$o .= ddfm_gen_radio($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_radio($f_i, $show_required);	
 						break;
 					case 'select':
-						$o .= ddfm_gen_select($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_select($f_i, $show_required);	
 						break;
 					case 'file':
-						$o .= ddfm_gen_file($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_file($f_i, $show_required);	
 						break;				
 					case 'selrecip':
-						$o .= ddfm_gen_selrecip($f_i, $show_required);	
+						$o .= _MD_DDFM_gen_selrecip($f_i, $show_required);	
 						break;
 				}
 			}
@@ -1588,7 +1600,7 @@ function ddfm_gen_selrecip($item) {
 			}
 
 			$o .= '<p><input type="hidden" name="MAX_FILE_SIZE" value="' . $max_file_size . '" /></p>' . "\n";
-			$o .= '<input type="submit" class="btn_envia" name="form_submitted" value="' . DDFM_SUBMITBUTTON . '" />' . "\n\n";
+			$o .= '<input type="submit" class="btn_envia" name="form_submitted" value="' . _MD_DDFM_SUBMITBUTTON . '" />' . "\n\n";
 
 			$o .= '</form>';
 			$o .= '</div>' . "\n\n";
