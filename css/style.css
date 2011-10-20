@@ -1,0 +1,64 @@
+/* FALE CONOSCO */
+form.ddfm .fmverify {
+	width: 30%;
+	margin-bottom: 15px; 
+	padding: 3px;
+	position: relative;
+	display: block;
+	background-color: #f1f3f4;
+	border: 0;
+	-moz-border-radius: 9px;
+	-webkit-border-radius: 9px;
+	border-radius: 9px;
+}
+form.ddfm input {
+	color: #939598;
+	width: 506px;
+	height: 24px;
+	margin-bottom: 15px; 
+	padding: 3px;
+	padding-left:	15px;
+	position: relative;
+	display: block;
+	background-color: #f1f3f4;
+	border: 0;
+	-moz-border-radius: 9px;
+	-webkit-border-radius: 9px;
+	border-radius: 9px;
+}
+form.ddfm .fmtextarea {
+	color: #939598;
+	width: 514px;
+	height: 174px;
+	background-color: #f1f3f4;
+	border: 0;
+	padding-top: 5px;
+	padding-left:	15px;
+	-moz-border-radius: 9px;
+	-webkit-border-radius: 9px;
+	border-radius: 9px;
+}
+/*form.ddfm .submit {
+	text-align: right;
+	clear: both; 
+	width: 98px;
+	height: 35px;
+	background-color: #80c343;
+	-moz-border-radius: 9px;
+	-webkit-border-radius: 9px;
+	border-radius: 9px;
+}*/
+form.ddfm .btn_envia{
+	float: 					right;
+	color:					#fff;
+	margin-right: 			40px;
+	padding-left:			1px;
+	text-align: 			center;
+	clear: 					both; 
+	width: 					98px;
+	height: 				35px;
+	background-color: 		#80c343;
+	-moz-border-radius: 	9px;
+	-webkit-border-radius: 	9px;
+	border-radius: 			9px;
+}
