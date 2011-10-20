@@ -62,7 +62,7 @@ $path_contact_page = '';
 // If you are just sending email to a single address, enter it here. For more advanced
 // usage such as multiple recipients, CC, BCC, etc.. please see the web page for instructions
 
-$recipients = 'einstein@einsoft.com.br';
+$recipients = $xoopsModuleConfig['contato_email'];
 
 // FORM STRUCTURE
 // This is used to generate the form. Each form element must be on its own line.
