@@ -84,13 +84,15 @@ $modversion['configcat'][2]['description'] = '_MI_CONTACT_GEN_DSC';
 // CONFIG stuff
 // contact_allowsendconfirm
 // contact_depttitle
-$modversion['config'][1]['name'] = 'contato_email';
-$modversion['config'][1]['title'] = 'E-mail';
-$modversion['config'][1]['description'] = 'E-mail para receber as mensagens';
-$modversion['config'][1]['formtype'] = 'textbox';
-$modversion['config'][1]['valuetype'] = 'text';
-$modversion['config'][1]['default'] = _MI_CONTATO_DEPTTITLEDEFAULT;
-$modversion['config'][1]['category'] = 'general';
+$i = 1;
+$modversion['config'][$i]['name']        	= 'contato_email';
+$modversion['config'][$i]['title']       	= '_MI_CONTATO_EMAIL';
+$modversion['config'][$i]['description']	= '_MI_CONTATO_EMAIL_DESC';
+$modversion['config'][$i]['formtype']		= 'textbox';
+$modversion['config'][$i]['valuetype']		= 'text';
+$modversion['config'][1]['default']			= '';
+$modversion['config'][1]['category']		= 'general';
+unset($i);
 
 // contact_icq
 /*
