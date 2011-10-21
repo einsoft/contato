@@ -9,6 +9,9 @@ if (!is_object($GLOBALS['xoopsUser'])) {
 $xoopsOption['template_main'] = "contato_formulario.html";
 
 include $GLOBALS['xoops']->path('header.php');
+// Add Stylesheet
+$xoTheme->addStylesheet ( XOOPS_URL . '/modules/' . $xoopsModule->getVar("dirname") . '/css/style.css' );
+
 /*
 ** Dagon Design Form Mailer 
 **
