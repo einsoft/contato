@@ -69,12 +69,7 @@ $recipients = $xoopsModuleConfig['contato_email'];
 // This is used to generate the form. Each form element must be on its own line.
 // Detailed usage instructions can be found on the web page
 
-$form_struct = '
-	type=text|class=fmtext|label=Nome|fieldname=fm_name|max=100|req=true
-	type=text|class=fmtext|label=Email|fieldname=fm_email|max=100|req=true|ver=email
-	type=textarea|class=fmtextarea|label=Mensagem|fieldname=fm_message|max=1000|rows=6|req=true
-	type=verify|class=fmverify|label=Verificação 
-';
+$form_struct = $xoopsModuleConfig['contato_form'];
 
 // MANUAL FORM CODE
 // Advanced users only! please read documentation first

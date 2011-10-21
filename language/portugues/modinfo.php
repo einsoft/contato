@@ -18,5 +18,7 @@ define("_MI_CONTATO_RE_PRIVATE_KEYDESC","DESCRIÇÃO SOBRE Chave privada Recaptcha
 define("_MI_CONTATO_OFF","Desligado");
 define("_MI_CONTATO_BASIC","Básico");
 define("_MI_CONTATO_RECAPTCHA","Recaptcha");
+define("_MI_CONTATO_FORM","Campos do formulário");
+define("_MI_CONTATO_FORMDESC","Instruções para composição do formulário: <br /><a href='http://www.dagondesign.com/articles/secure-php-form-mailer-script/#usage'>http://www.dagondesign.com/articles/secure-php-form-mailer-script/#usage</a>");
 
 ?>

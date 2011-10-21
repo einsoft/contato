@@ -115,6 +115,14 @@ $modversion['config'][$i]['formtype']		= 'textbox';
 $modversion['config'][$i]['valuetype']		= 'text';
 $modversion['config'][$i]['default']			= '';
 $modversion['config'][$i]['category']		= 'general';
+$i++;
+$modversion['config'][$i]['name']        	= 'contato_form';
+$modversion['config'][$i]['title']       	= '_MI_CONTATO_FORM';
+$modversion['config'][$i]['description']	= '_MI_CONTATO_FORMDESC';
+$modversion['config'][$i]['formtype']		= 'textarea';
+$modversion['config'][$i]['valuetype']		= 'text';
+$modversion['config'][$i]['default']			= '';
+$modversion['config'][$i]['category']		= 'general';
 unset($i);
 
 // contact_icq
