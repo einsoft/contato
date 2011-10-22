@@ -1,4 +1,10 @@
-Read Me First
+CREDITS
 =============
 
-Please make sure that you download the XOOPS Icon Set, and upload it to uploads/images directory
+All the credits goes to the original author of the script:
+
+Dragon Design:
+http://www.dagondesign.com/articles/secure-php-form-mailer-script/
+
+You can contribute for him here:
+http://www.dagondesign.com/donate/
