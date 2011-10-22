@@ -1,3 +1,40 @@
+/*===FALE COM==*/
+#falecom-introtext {}
+#form-wrapper {
+	width: 840px;
+	margin-top:				10px;
+	margin-left: 			auto;
+	margin-right: 			auto;
+}
+#falecom-formulario {
+	float: 				left;
+	width: 				65%;
+	padding-top:		10px;
+}
+#falecom-panel {
+	float:				right;
+	background:			url(../images/contact_us.jpg) no-repeat center top;
+	width: 				34%;
+	height:				350px;
+
+}
+#falecom-panel p{
+	margin-top:			250px;
+	margin-right:		20px;
+	text-align:			right;
+	
+}
+#falecom-mapa {
+	margin-top:				10px;
+	margin-bottom:			10px;
+	width:					870px;
+	height:					200px;
+	margin-left: 			auto;
+	margin-right: 			auto;
+	background:				url(img/maestro_mapa.jpg) no-repeat left top;
+	padding-top:			16px;
+	padding-left:			15px;
+}
 /* FALE CONOSCO */
 form.ddfm .fmverify {
 	width: 30%;
