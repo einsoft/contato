@@ -1,4 +1,5 @@
 # excludes for xCode and VC++
+_res/
 build/
 Unused/
 Site/

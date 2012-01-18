@@ -1,4 +1,4 @@
-Version 2.49 2011/04/12:
+Version 0.05 2011/10/21:
 =================================
-- added new Admin Menu Class 
+- Ported the script from here: http://www.dagondesign.com/articles/secure-php-form-mailer-script/
 

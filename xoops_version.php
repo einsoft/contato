@@ -30,11 +30,11 @@ if (!defined('XOOPS_ROOT_PATH')) {
 $moduleDirName = basename( dirname( __FILE__ ) ) ;
 
 $modversion['name'] = "Contato";
-$modversion['version'] = 0.1;
+$modversion['version'] = 0.5;
 $modversion['description'] = "Módulo de contato";
-$modversion['credits'] = "einstein@einsoft.com.br";
-$modversion['author'] = 'fabricadecliques.com.br';
-$modversion['nickname'] = 'einstein';
+$modversion['credits'] = "Dagon Design";
+$modversion['author'] = 'http://www.dagondesign.com/articles/secure-php-form-mailer-script/';
+$modversion['nickname'] = 'Dagon Design';
 $modversion['help'] = 'page=help';
 $modversion['license'] = 'GNU GPL 2.0';
 $modversion['license_url'] = "www.gnu.org/licenses/gpl-2.0.html/";
@@ -46,12 +46,12 @@ $modversion['icons16'] = 'Frameworks/moduleclasses/icons/16';
 $modversion['icons32'] = 'Frameworks/moduleclasses/icons/32';
 
 //about
-$modversion["module_website_url"] = "http://www.fabricadecliques.com.br/";
-$modversion["module_website_name"] = "Fábrica de Cliques";
+$modversion["module_website_url"] = "http://www.sf.net/einsoft";
+$modversion["module_website_name"] = "Einsoft at sf.net";
 $modversion["release_date"] = "17/10/2011";
 $modversion["module_status"] = "Beta";
-$modversion["author_website_url"] = "http://www.einsoft.com.br/";
-$modversion["author_website_name"] = "Einsoft Microsistemas";
+$modversion["author_website_url"] = "http://www.dagondesign.com/";
+$modversion["author_website_name"] = "Dagon Design";
 $modversion['min_php']='5.2';
 $modversion['min_xoops']="2.5";
 
@@ -88,7 +88,7 @@ $modversion['config'][$i]['title']       	= '_MI_CONTATO_EMAIL';
 $modversion['config'][$i]['description']	= '_MI_CONTATO_EMAIL_DESC';
 $modversion['config'][$i]['formtype']		= 'textbox';
 $modversion['config'][$i]['valuetype']		= 'text';
-$modversion['config'][$i]['default']			= '';
+$modversion['config'][$i]['default']		= 'yourname@yourdomain.net';
 $modversion['config'][$i]['category']		= 'general';
 $i++;
 $modversion["config"][$i]["name"]        	= "contato_anti_spam"; 
@@ -96,7 +96,7 @@ $modversion["config"][$i]["title"]       	= "_MI_CONTATO_IMAGEVERIFICATION";
 $modversion["config"][$i]["description"] 	= "_MI_CONTATO_IMAGEVERIFICATIONDESC"; 
 $modversion["config"][$i]["formtype"]    	= "select"; 
 $modversion["config"][$i]["valuetype"]   	= "text"; 
-$modversion["config"][$i]["default"]     	= "dhtmltextarea"; 
+$modversion["config"][$i]["default"]     	= ""; 
 $modversion['config'][$i]['options'] 		= array('_MI_CONTATO_OFF' => 0, '_MI_CONTATO_BASIC' => 1, '_MI_CONTATO_RECAPTCHA' => 2);
 $modversion["config"][$i]["category"]    	= "settings";
 $i++;
@@ -105,7 +105,7 @@ $modversion['config'][$i]['title']       	= '_MI_CONTATO_RE_PUBLIC_KEY';
 $modversion['config'][$i]['description']	= '_MI_CONTATO_RE_PUBLIC_KEYDESC';
 $modversion['config'][$i]['formtype']		= 'textbox';
 $modversion['config'][$i]['valuetype']		= 'text';
-$modversion['config'][$i]['default']			= '';
+$modversion['config'][$i]['default']		= '';
 $modversion['config'][$i]['category']		= 'general';
 $i++;
 $modversion['config'][$i]['name']        	= 'contato_re_private';
@@ -121,7 +121,13 @@ $modversion['config'][$i]['title']       	= '_MI_CONTATO_FORM';
 $modversion['config'][$i]['description']	= '_MI_CONTATO_FORMDESC';
 $modversion['config'][$i]['formtype']		= 'textarea';
 $modversion['config'][$i]['valuetype']		= 'text';
-$modversion['config'][$i]['default']			= '';
+$modversion['config'][$i]['default']			= '
+type=text|class=fmtext|label=Nome|fieldname=fm_name|max=100|req=true
+type=text|class=fmtext|label=Email|fieldname=fm_email|max=100|req=true|ver=email
+type=text|class=fmtext|label=Email|fieldname=fm_email|max=100|req=true|ver=email
+type=textarea|class=fmtextarea|label=Mensagem|fieldname=fm_message|max=1000|rows=6|req=true
+type=verify|class=fmverify|label=Verificação
+';
 $modversion['config'][$i]['category']		= 'general';
 unset($i);
 
