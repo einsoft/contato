@@ -31,7 +31,7 @@ $moduleDirName = basename( dirname( __FILE__ ) ) ;
 
 $modversion['name'] = "Contato";
 $modversion['version'] = 0.5;
-$modversion['description'] = "MÛdulo de contato";
+$modversion['description'] = "M√≥dulo de contato";
 $modversion['credits'] = "Dagon Design";
 $modversion['author'] = 'http://www.dagondesign.com/articles/secure-php-form-mailer-script/';
 $modversion['nickname'] = 'Dagon Design';
@@ -95,7 +95,7 @@ $modversion["config"][$i]["name"]        	= "contato_anti_spam";
 $modversion["config"][$i]["title"]       	= "_MI_CONTATO_IMAGEVERIFICATION"; 
 $modversion["config"][$i]["description"] 	= "_MI_CONTATO_IMAGEVERIFICATIONDESC"; 
 $modversion["config"][$i]["formtype"]    	= "select"; 
-$modversion["config"][$i]["valuetype"]   	= "text"; 
+$modversion["config"][$i]["valuetype"]   	= "text";
 $modversion["config"][$i]["default"]     	= ""; 
 $modversion['config'][$i]['options'] 		= array('_MI_CONTATO_OFF' => 0, '_MI_CONTATO_BASIC' => 1, '_MI_CONTATO_RECAPTCHA' => 2);
 $modversion["config"][$i]["category"]    	= "settings";
@@ -124,10 +124,17 @@ $modversion['config'][$i]['valuetype']		= 'text';
 $modversion['config'][$i]['default']			= '
 type=text|class=fmtext|label=Nome|fieldname=fm_name|max=100|req=true
 type=text|class=fmtext|label=Email|fieldname=fm_email|max=100|req=true|ver=email
-type=text|class=fmtext|label=Email|fieldname=fm_email|max=100|req=true|ver=email
 type=textarea|class=fmtextarea|label=Mensagem|fieldname=fm_message|max=1000|rows=6|req=true
-type=verify|class=fmverify|label=VerificaÁ„o
+type=verify|class=fmverify|label=Verifica√ß√£o
 ';
+$modversion['config'][$i]['category']		= 'general';
+$i++;
+$modversion['config'][$i]['name']        	= 'contato_formmessage';
+$modversion['config'][$i]['title']       	= '_MI_CONTATO_FORMMESSAGE';
+$modversion['config'][$i]['description']	= '_MI_CONTATO_FORMMESSAGEDESC';
+$modversion['config'][$i]['formtype']		= 'textarea';
+$modversion['config'][$i]['valuetype']		= 'text';
+$modversion['config'][$i]['default']			= '<p>Obrigado, sua mensagem foi enviada! As mensagens s√£o checadas todos os dias √∫teis de 08:00 as 18:00 horas.</p>';
 $modversion['config'][$i]['category']		= 'general';
 unset($i);
 

@@ -2,8 +2,8 @@
 include_once dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'mainfile.php';
 
 if (!is_object($GLOBALS['xoopsUser'])) {
-    redirect_header(XOOPS_URL, 3, _NOPERM);
-    exit();
+	redirect_header(XOOPS_URL, 3, _NOPERM);
+	exit();
 }
 
 $xoopsOption['template_main'] = "contato_formulario.html";
@@ -122,7 +122,7 @@ $message_structure = '';
 // This is the text shown after the visitor has successfully submitted the form.
 // You use field names in this - they will be replaced with the user input from those fields.
 
-$sent_message = '<p>Obrigado, sua mensagem foi enviada! As mensagens são checadas todos os dias úteis de 08:00 as 18:00 horas.</p>';
+$sent_message = $xoopsModuleConfig['contato_formmessage'];
 
 // AUTO REPLY OPTION
 // This optional feature allows you to automatically send a pre-defined auto reply email.
@@ -639,7 +639,7 @@ function _MD_DDFM_gen_verify($item) {
 	if (_MD_DDFM_check_gd_support()) {
 //		$gen .= '<p class="fieldwrap"><label for="fm_verify">' . $req_text . $item['label'] . '</label>' . "\n";
 	$gen .= '<p class="fieldwrap">';
-		$gen .= '<input class="'. $item['class'] . '" type="text" name="fm_verify" id="fm_verify" value="Digite o código abaixo" onfocus=\'if(this.value=="Digite o código abaixo"){this.value="";}\' onblur=\'if(this.value==""){this.value="Digite o código abaixo";}\' />' . "\n";
+		$gen .= '<input class="'. $item['class'] . '" type="text" name="fm_verify" id="fm_verify" value="Digite o cÃ³digo abaixo" onfocus=\'if(this.value=="Digite o cÃ³digo abaixo"){this.value="";}\' onblur=\'if(this.value==""){this.value="Digite o cÃ³digo abaixo";}\' />' . "\n";
 		$gen .= '<img src="' . $script_path . '?v=1" alt="' . $item['label'] . '" title="' . $item['label'] . '" />';
 		$gen .= '</p>' . "\n\n";
 	}

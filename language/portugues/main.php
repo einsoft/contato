@@ -7,7 +7,7 @@ define('_MD_DDFM_ERRORMSG', '<h1>Ooops!</h1>');
 define('_MD_DDFM_MAXCHARLIMIT', 'Limite de caracteres para');
 define('_MD_DDFM_MISSINGFIELD', 'Preencha todos os campos ');
 define('_MD_DDFM_INVALIDINPUT', 'Entrada de dados inv&aacute;lida para');
-define('_MD_DDFM_INVALIDEMAIL', 'Endereço de email inv&aacute;lido para');
+define('_MD_DDFM_INVALIDEMAIL', 'EndereÃ§o de email inv&aacute;lido para');
 define('_MD_DDFM_INVALIDURL', 'URL inv&aacute;lida para');
 define('_MD_DDFM_NOMATCH', 'Tipo de arquivo n&atilde;o aceito para');
 define('_MD_DDFM_MISSINGVER', 'Digite o c&oacute;digo de verifica&ccedil;&atilde;o');
