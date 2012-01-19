@@ -26,13 +26,9 @@
 //  ------------------------------------------------------------------------ //
 
 $module_handler =& xoops_gethandler('module');
-$xoopsModule =& XoopsModule::getByDirname('news');
+$xoopsModule =& XoopsModule::getByDirname('contato');
 $moduleInfo =& $module_handler->get($xoopsModule->getVar('mid'));
 $pathImageAdmin = $moduleInfo->getInfo('icons32');
-
-// include_once XOOPS_ROOT_PATH.'/modules/news/include/functions.php';
-// $pathImageAdmin = news_getmoduleoption('dirmoduleadmin').'icons/32';
-
 
 $adminmenu = array();
 global $xoopsModule;
