@@ -346,7 +346,7 @@ function _MD_DDFM_is_valid_url($link) {
 function dd_is_valid_email($email) {
 	/* Credits: http://www.ilovejackdaniels.com/php/email-address-validation/ */
 
-	if (!ereg("^[^@]{1,64}@[^@]{1,255}$", $email)) {    
+/*	if (!ereg("^[^@]{1,64}@[^@]{1,255}$", $email)) {    
 		return false;  
 	}  
 	$email_array = explode("@", $email);  
@@ -367,7 +367,8 @@ function dd_is_valid_email($email) {
 			}    
 		}  
 	} 
-	return true;
+	return true; */
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 } 
 
 
