@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+npm-debug.log
+/bower_components
+/node_modules
+/vendor
+/_res
+/__res
+/_docs
+/webgerente_lib/vendor
+/webgerente_data/data/seguro.php
+/_tp_lib/vendor
+/_tp_data/data/seguro.php
+/_tp_data/data/secure.php
+/_tp_data/data/caches
+/_tp_data/data/caches/*
+/_tp_data/caches/
